@@ -37,9 +37,9 @@
             // 
             // browseBtn
             // 
-            browseBtn.Location = new Point(75, 553);
+            browseBtn.Location = new Point(38, 548);
             browseBtn.Name = "browseBtn";
-            browseBtn.Size = new Size(154, 42);
+            browseBtn.Size = new Size(245, 43);
             browseBtn.TabIndex = 0;
             browseBtn.Text = "Browse ";
             browseBtn.UseVisualStyleBackColor = true;
@@ -47,7 +47,7 @@
             // 
             // treeBtn
             // 
-            treeBtn.Location = new Point(296, 22);
+            treeBtn.Location = new Point(296, 81);
             treeBtn.Name = "treeBtn";
             treeBtn.Size = new Size(137, 42);
             treeBtn.TabIndex = 1;
@@ -57,7 +57,7 @@
             // 
             // barChartBtn
             // 
-            barChartBtn.Location = new Point(439, 23);
+            barChartBtn.Location = new Point(439, 82);
             barChartBtn.Name = "barChartBtn";
             barChartBtn.Size = new Size(137, 41);
             barChartBtn.TabIndex = 2;
@@ -67,9 +67,9 @@
             // 
             // treeView1
             // 
-            treeView1.Location = new Point(38, 23);
+            treeView1.Location = new Point(38, 81);
             treeView1.Name = "treeView1";
-            treeView1.Size = new Size(245, 510);
+            treeView1.Size = new Size(245, 461);
             treeView1.TabIndex = 3;
             treeView1.AfterSelect += treeView1_AfterSelect;
             // 
@@ -77,7 +77,7 @@
             // 
             visualizationPanel.AutoScroll = true;
             visualizationPanel.BorderStyle = BorderStyle.FixedSingle;
-            visualizationPanel.Location = new Point(296, 70);
+            visualizationPanel.Location = new Point(296, 128);
             visualizationPanel.Name = "visualizationPanel";
             visualizationPanel.Size = new Size(876, 463);
             visualizationPanel.TabIndex = 4;
