@@ -83,7 +83,7 @@
             visualizationPanel.TabIndex = 4;
             visualizationPanel.Paint += visualizationPanel_Paint;
             // 
-            // Form1
+            // GUI
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -93,8 +93,8 @@
             Controls.Add(treeBtn);
             Controls.Add(treeView1);
             Controls.Add(browseBtn);
-            Name = "Form1";
-            Text = "Form1";
+            Name = "GUI";
+            Text = "Folder Visualizer";
             Load += Form1_Load;
             ResumeLayout(false);
         }

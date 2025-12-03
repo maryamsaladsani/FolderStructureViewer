@@ -19,10 +19,8 @@ namespace SWE316HW2MA
             this.children = new List<FileSystemComponent>();
         }
 
-        // [3]: Getters and Setters
-        // (No additional getters/setters needed for this class)
 
-        // [4]: Overriding Component Methods
+        // [3]: Overriding Component Methods
         public override string GetName()
         {
             return name;
@@ -61,6 +59,9 @@ namespace SWE316HW2MA
         {
             return children;
         }
+
+        public override Color GetBoxColor() { return Color.LightBlue; }
+        public override string GetIconKey() { return "folder"; }
     }
 }
 

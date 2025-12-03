@@ -6,10 +6,9 @@ namespace WinFormsApp1
     {
 
         // [1]: Core Components
-        private Folder rootFolder;
+        private FileSystemComponent root;
         private Visualizer visualizer;
         private FileSystemLoader loader;
-
 
         // [2]: Constructor
         public GUI()
@@ -20,85 +19,65 @@ namespace WinFormsApp1
             visualizer = new Visualizer();
             loader = new FileSystemLoader();
 
-            MessageBox.Show("All classes loaded successfully!", "Test");
+            SetupTreeViewIcons();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+
+        // [3]: Area(A) - TreeView
+        // Updates the TreeView on the left side with the folder structure
+        private void UpdateTreeView()
         {
+            treeView1.Nodes.Clear();
 
+            // Create root node
+            TreeNode rootNode = new TreeNode(root.GetName());
+            rootNode.Tag = root;
+            rootNode.ImageKey = root.GetIconKey();
+            rootNode.SelectedImageKey = root.GetIconKey();
+
+            // Recursively add all children
+            AddComponentToTreeNode(root, rootNode);
+
+            // Add to TreeView and expand
+            treeView1.Nodes.Add(rootNode);
+            rootNode.Expand();
         }
 
-
-        // [4]: Browse Button Click - Load folder structure
-        private void visualizationPanel_Paint(object sender, PaintEventArgs e)
+        // Helper Method: Recursively adds file system components to TreeView nodes
+        private void AddComponentToTreeNode(FileSystemComponent component, TreeNode node)
         {
+            
+            foreach (FileSystemComponent child in component.GetChildren())
+            {
+                string nodeName = $"{child.GetName()} ({child.GetFormattedSize()})";
+                TreeNode childNode = new TreeNode(nodeName);
+                childNode.Tag = child;
+                childNode.ImageKey = child.GetIconKey();
+                childNode.SelectedImageKey = child.GetIconKey();
 
+                node.Nodes.Add(childNode);
+                AddComponentToTreeNode(child, childNode);
+            }
         }
 
-        // [5]: Tree Button Click - Visualize as Tree
-        private void treeBtn_Click(object sender, EventArgs e)
+        private void SetupTreeViewIcons()
         {
-            if (rootFolder == null)
-            {
-                MessageBox.Show("Please select a folder first!", "No Folder Loaded",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            ImageList imageList = new ImageList();
+            imageList.ImageSize = new Size(16, 16);
 
-            try
-            {
-                // Strategy Pattern in action!
-                // Step 1: Set the strategy to Tree
-                visualizer.SetStrategy(new TreeVisualizationStrategy());
+            imageList.Images.Add("folder", SystemIcons.WinLogo.ToBitmap());
+            imageList.Images.Add("file", SystemIcons.Application.ToBitmap());
 
-                // Step 2: Visualize (SINGLE LINE CALL!)
-                visualizer.Visualize(rootFolder, visualizationPanel);
-
-                // Optional: Update status
-                this.Text = $"Folder Traverser - Tree View - {rootFolder.GetFormattedSize()}";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error visualizing:\n{ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            treeView1.ImageList = imageList;
         }
-
-        // [6]: Bar Chart Button Click - Visualize as Bar Chart
-        private void barChartBtn_Click(object sender, EventArgs e)
-        {
-            if (rootFolder == null)
-            {
-                MessageBox.Show("Please select a folder first!", "No Folder Loaded",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            try
-            {
-                // Strategy Pattern in action!
-                // Step 1: Set the strategy to Bar Chart
-                visualizer.SetStrategy(new BarChartVisualizationStrategy());
-
-                // Step 2: Visualize (SINGLE LINE CALL!)
-                visualizer.Visualize(rootFolder, visualizationPanel);
-
-                // Optional: Update status
-                this.Text = $"Folder Traverser - Bar Chart View - {rootFolder.GetFormattedSize()}";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error visualizing:\n{ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }
 
+        // [4]: Browse Button Click - Load folder structure
         private void browseBtn_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog dialog = new FolderBrowserDialog())
@@ -110,33 +89,22 @@ namespace WinFormsApp1
                 {
                     try
                     {
-                        // Show loading message (optional - update a status label if you have one)
                         this.Cursor = Cursors.WaitCursor;
 
-                        // Step 1: Load folder structure using FileSystemLoader
-                        rootFolder = loader.LoadFromPath(dialog.SelectedPath);
+                        // Load folder structure
+                        root = loader.LoadFromPath(dialog.SelectedPath);
 
-                        // Step 2: Calculate all sizes (SINGLE LINE CALL - Composite Pattern!)
-                        rootFolder.GetSize();
+                        // Calculate all sizes (Composite Pattern in action!)
+                        root.GetSize();
 
-                        // Step 3: Update the TreeView on the left
+                        // Update the TreeView on the left
                         UpdateTreeView();
 
-                        // Step 4: Enable visualization buttons
-                        // Note: Update these names to match your actual button names from designer
-                        // treeBtn.Enabled = true;
-                        // barChartBtn.Enabled = true;
+                        // Enable visualization buttons
+                        treeBtn.Enabled = true;
+                        barChartBtn.Enabled = true;
 
-                        // Step 5: Show statistics (optional - if you have a status label)
-                        int fileCount = FileSystemHelper.CountFiles(rootFolder);
-                        int folderCount = FileSystemHelper.CountFolders(rootFolder);
-                        string stats = $"Loaded: {fileCount} files, {folderCount} folders - Total: {rootFolder.GetFormattedSize()}";
-
-                        // Show message
-                        MessageBox.Show(stats, "Folder Loaded Successfully",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Step 6: Auto-visualize as tree
+                        // Auto-visualize as tree (default view)
                         treeBtn_Click(sender, e);
                     }
                     catch (Exception ex)
@@ -150,53 +118,64 @@ namespace WinFormsApp1
                     }
                 }
             }
-
         }
 
-        // [9]: Helper Method - Update TreeView
-        /// <summary>
-        /// Updates the TreeView on the left side with the folder structure
-        /// </summary>
-        private void UpdateTreeView()
+
+        // [5]: Tree Button Click - Visualize as Tree
+        private void treeBtn_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
-
-            // Create root node
-            TreeNode rootNode = new TreeNode(rootFolder.GetName());
-            rootNode.Tag = rootFolder; // Store reference to the folder object
-
-            // Recursively add all children
-            AddComponentToTreeNode(rootFolder, rootNode);
-
-            // Add to TreeView and expand
-            treeView1.Nodes.Add(rootNode);
-            rootNode.Expand();
-        }
-
-        // [10]: Helper Method - Recursively add to TreeNode
-        /// <summary>
-        /// Recursively adds file system components to TreeView nodes
-        /// </summary>
-        private void AddComponentToTreeNode(FileSystemComponent component, TreeNode node)
-        {
-            if (component is Folder)
+            if (root == null)
             {
-                Folder folder = (Folder)component;
-                List<FileSystemComponent> children = folder.GetChildren();
+                MessageBox.Show("Please select a folder first!", "No Folder Loaded",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                foreach (FileSystemComponent child in children)
-                {
-                    // Create node with name and size
-                    string nodeName = $"{child.GetName()} ({child.GetFormattedSize()})";
-                    TreeNode childNode = new TreeNode(nodeName);
-                    childNode.Tag = child; // Store reference
+            try
+            {
+                // Strategy Pattern in action!
+                // Step 1: Set the strategy to Tree
+                visualizer.SetStrategy(new TreeVisualizationStrategy());
 
-                    node.Nodes.Add(childNode);
-
-                    // Recurse for folders
-                    AddComponentToTreeNode(child, childNode);
-                }
+                // Step 2: Visualize 
+                visualizer.Visualize(root, visualizationPanel);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error visualizing:\n{ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        // [6]: Bar Chart Button Click - Visualize as Bar Chart
+        private void barChartBtn_Click(object sender, EventArgs e)
+        {
+            if (root == null)
+            {
+                MessageBox.Show("Please select a folder first!", "No Folder Loaded",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                // Strategy Pattern in action!
+                // Step 1: Set the strategy to Bar Chart
+                visualizer.SetStrategy(new BarChartVisualizationStrategy());
+
+                // Step 2: Visualize 
+                visualizer.Visualize(root, visualizationPanel);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error visualizing:\n{ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void Form1_Load(object sender, EventArgs e) { }
+        private void visualizationPanel_Paint(object sender, PaintEventArgs e) { }
+
     }
+
+
 }

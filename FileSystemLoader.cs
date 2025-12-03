@@ -7,16 +7,11 @@ namespace SWE316HW2MA
 {
     /// <summary>
     /// FileSystemLoader - Responsible for loading folder structures from disk
-    /// Separates the concern of file I/O from the application logic
-    /// Follows Single Responsibility Principle
     /// </summary>
     internal class FileSystemLoader
     {
-        /// <summary>
-        /// Loads a folder structure from the specified path
-        /// </summary>
-        /// <param name="path">The directory path to load</param>
-        /// <returns>Folder object representing the loaded structure</returns>
+        
+        // Loads a folder structure from the specified path
         public Folder LoadFromPath(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -32,11 +27,8 @@ namespace SWE316HW2MA
             return TraverseDirectory(path);
         }
 
-        /// <summary>
-        /// Recursively traverses a directory and builds the folder structure
-        /// </summary>
-        /// <param name="path">The directory path to traverse</param>
-        /// <returns>Folder object with all children loaded</returns>
+
+        // Recursively traverses a directory and builds the folder structure
         private Folder TraverseDirectory(string path)
         {
             DirectoryInfo dirInfo = new DirectoryInfo(path);

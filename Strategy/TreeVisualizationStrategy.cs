@@ -9,8 +9,6 @@ namespace SWE316HW2MA
 {
     /// <summary>
     /// TreeVisualizationStrategy - Concrete Strategy for tree-style visualization
-    /// Implements IVisualizationStrategy to draw folder structure in hierarchical tree layout
-    /// Shows folders and files with indentation based on their depth level
     /// </summary>
     internal class TreeVisualizationStrategy : IVisualizationStrategy
     {
@@ -19,136 +17,72 @@ namespace SWE316HW2MA
         private int verticalSpacing;   // Vertical spacing between items
         private int currentY;          // Tracks current Y position while drawing
 
-        // [2]: Constructors
+        // [2]: Constructor
         public TreeVisualizationStrategy()
         {
-            this.indentSize = 20;
-            this.verticalSpacing = 25;
-        }
-
-        public TreeVisualizationStrategy(int indentSize, int verticalSpacing)
-        {
-            this.indentSize = indentSize;
-            this.verticalSpacing = verticalSpacing;
+            this.indentSize = 40;
+            this.verticalSpacing = 50;
         }
 
         // [3]: Interface Implementation - Override Visualize()
-        public void Visualize(Folder rootFolder, Panel panel)
+        public void Visualize(FileSystemComponent rootFolder, Panel panel)
         {
             currentY = 10; // Start from top with some padding
             DrawComponent(rootFolder, panel, 10, 0); // Start at level 0
         }
 
         // [4]: Helper Methods
-        // Recursively draws a file system component and its children, This implements the tree visualization logic
+        // Recursively draws a file system component and its children
         private void DrawComponent(FileSystemComponent component, Panel panel, int x, int level)
         {
-            // Calculate indentation based on level
             int xPosition = x + (level * indentSize);
 
-            // Create label for this component
+            // Draw connecting lines if not root
+            if (level > 0)
+            {
+                // Horizontal line from parent to this box
+                Panel horizontalLine = new Panel();
+                horizontalLine.BackColor = Color.LightGray;
+                horizontalLine.Size = new Size(15, 1);
+                horizontalLine.Location = new Point(xPosition - 15, currentY + 10);
+                panel.Controls.Add(horizontalLine);
+
+                // Vertical line from parent
+                Panel verticalLine = new Panel();
+                verticalLine.BackColor = Color.LightGray;
+                verticalLine.Size = new Size(1, verticalSpacing);
+                verticalLine.Location = new Point(xPosition - 15, currentY - verticalSpacing + 10);
+                panel.Controls.Add(verticalLine);
+            }
+
+            // Create box/rectangle for the component
+            Panel box = new Panel();
+            box.BorderStyle = BorderStyle.FixedSingle;
+            box.Location = new Point(xPosition, currentY);
+            box.AutoSize = false;
+
+            // Diffrentiate colors by POLYMORPHISM - No if statements!
+            box.BackColor = component.GetBoxColor();
+
+            // Create label inside the box
             Label label = new Label();
             label.AutoSize = true;
-            label.Location = new Point(xPosition, currentY);
             label.Text = $"{component.GetName()} ({component.GetFormattedSize()})";
+            label.Location = new Point(5, 3);
+            label.Font = new Font("Segoe UI", 9);
 
-            // Different styling for folders vs files
-            if (component is Folder)
-            {
-                label.Font = new Font(label.Font, FontStyle.Bold);
-                label.ForeColor = Color.DarkBlue;
-            }
-            else if (component is File)
-            {
-                label.ForeColor = Color.DarkGreen;
-            }
+            // Add label to box
+            box.Controls.Add(label);
+            box.Size = new Size(label.Width + 15, label.Height + 10);
+            panel.Controls.Add(box);
 
-            panel.Controls.Add(label);
             currentY += verticalSpacing;
 
-            // If it's a folder, draw its children recursively
-            if (component is Folder)
+            // USE POLYMORPHISM - Draw children if they exist
+            foreach (FileSystemComponent child in component.GetChildren())
             {
-                Folder folder = (Folder)component;
-                List<FileSystemComponent> children = folder.GetChildren();
-
-                foreach (FileSystemComponent child in children)
-                {
-                    DrawComponent(child, panel, x, level + 1);
-                }
+                DrawComponent(child, panel, x, level + 1);
             }
         }
     }
 }
-
-//// // [4]: Helper Methods
-
-//// Recursively draws a file system component and its children, This implements the tree visualization logic
-
-//private void DrawComponent(FileSystemComponent component, Panel panel, int x, int level)
-
-//{
-
-//    // Calculate indentation based on level
-
-//    int xPosition = x + (level * indentSize);
-
-//    // Create label for this component
-
-//    Label label = new Label();
-
-//    label.AutoSize = true;
-
-//    label.Location = new Point(xPosition, currentY);
-
-//    label.Text = $"{component.GetName()} ({component.GetFormattedSize()})";
-
-//    // Different styling for folders vs files
-
-//    if (component is Folder)
-
-//    {
-
-//        label.Font = new Font(label.Font, FontStyle.Bold);
-
-//        label.ForeColor = Color.DarkBlue;
-
-//    }
-
-//    else if (component is File)
-
-//    {
-
-//        label.ForeColor = Color.DarkGreen;
-
-//    }
-
-//    panel.Controls.Add(label);
-
-//    currentY += verticalSpacing;
-
-//    // If it's a folder, draw its children recursively
-
-//    if (component is Folder)
-
-//    {
-
-//        Folder folder = (Folder)component;
-
-//        List<FileSystemComponent> children = folder.GetChildren();
-
-//        foreach (FileSystemComponent child in children)
-
-//        {
-
-//            DrawComponent(child, panel, x, level + 1);
-
-//        }
-
-//    }
-
-//}
-
-
-
-//my instructor would hit me if he saw this code, no need for if statemnts. instead, we can create a method and override twice it in file and folder classes, with this, we can distinguish, what do u see?

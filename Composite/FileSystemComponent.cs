@@ -22,6 +22,7 @@ namespace SWE316HW2MA
         }
 
         // [4]: Abstract Methods
+        // Typical methods
         public abstract string GetName();
         public abstract long GetSize();
         public abstract void Add(FileSystemComponent component);
@@ -29,8 +30,12 @@ namespace SWE316HW2MA
         public abstract FileSystemComponent GetChild(int index);
         public abstract List<FileSystemComponent> GetChildren();
 
+        // For visualization reasons 
+        public abstract Color GetBoxColor();
+        public abstract string GetIconKey();
 
-        // HELPERS
+
+        // [5]: HELPER: Size Formating 
         protected string FormatSize(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB", "TB" };

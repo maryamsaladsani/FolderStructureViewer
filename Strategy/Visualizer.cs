@@ -18,7 +18,8 @@ namespace SWE316HW2MA
         // [2]: Constructors
         public Visualizer()
         {
-            // No default strategy - must be set explicitly
+            // default strategy is Tree
+            this.strategy = new TreeVisualizationStrategy();
         }
 
         public Visualizer(IVisualizationStrategy strategy)
@@ -32,7 +33,7 @@ namespace SWE316HW2MA
             this.strategy = strategy;
         }
 
-        public void Visualize(Folder rootFolder, Panel panel)
+        public void Visualize(FileSystemComponent root, Panel panel)
         {
             if (strategy == null)
             {
@@ -43,7 +44,7 @@ namespace SWE316HW2MA
             panel.Controls.Clear();
 
             // Delegate to the strategy - this is the Strategy Pattern in action!
-            strategy.Visualize(rootFolder, panel);
+            strategy.Visualize(root, panel);
         }
     }
 }

@@ -37,7 +37,11 @@ namespace SWE316HW2MA
         public override void Add(FileSystemComponent component) { throw new NotSupportedException("Cannot add components to a File."); }
         public override void Remove(FileSystemComponent component) { throw new NotSupportedException("Cannot remove components from a File."); }
         public override FileSystemComponent GetChild(int index) { throw new NotSupportedException("File has no children."); }
-        public override List<FileSystemComponent> GetChildren() { throw new NotSupportedException("File has no children."); }
+        public override List<FileSystemComponent> GetChildren() { return new List<FileSystemComponent>(); }
+
+
+        public override Color GetBoxColor() { return Color.LightGreen; }
+        public override string GetIconKey() { return "file"; }
 
     }
 }
