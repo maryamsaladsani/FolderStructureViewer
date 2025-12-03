@@ -44,16 +44,13 @@ namespace SWE316HW2MA
         {
             result.Add(component);
 
-            if (component is Folder)
-            {
-                Folder folder = (Folder)component;
-                List<FileSystemComponent> children = folder.GetChildren();
+            List<FileSystemComponent> children = component.GetChildren();
 
-                foreach (FileSystemComponent child in children)
-                {
-                    FlattenRecursive(child, result);
-                }
+            foreach (FileSystemComponent child in children)
+            {
+                FlattenRecursive(child, result);
             }
+            
         }
     }
 }
