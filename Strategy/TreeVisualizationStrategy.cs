@@ -24,6 +24,8 @@ namespace SWE316HW2MA
             this.verticalSpacing = 50;
         }
 
+       
+
         // [3]: Interface Implementation - Override Visualize()
         public void Visualize(FileSystemComponent rootFolder, Panel panel)
         {
