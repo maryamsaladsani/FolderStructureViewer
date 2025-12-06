@@ -37,6 +37,7 @@
             // 
             // browseBtn
             // 
+            browseBtn.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             browseBtn.Location = new Point(38, 548);
             browseBtn.Name = "browseBtn";
             browseBtn.Size = new Size(245, 43);
@@ -67,6 +68,7 @@
             // 
             // treeView1
             // 
+            treeView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             treeView1.Location = new Point(38, 81);
             treeView1.Name = "treeView1";
             treeView1.Size = new Size(245, 461);
@@ -75,6 +77,7 @@
             // 
             // visualizationPanel
             // 
+            visualizationPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             visualizationPanel.AutoScroll = true;
             visualizationPanel.BorderStyle = BorderStyle.FixedSingle;
             visualizationPanel.Location = new Point(296, 128);
